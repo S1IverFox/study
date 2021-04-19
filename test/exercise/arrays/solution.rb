@@ -2,8 +2,7 @@ module Exercise
   module Arrays
     class << self
       def replace(array)
-        sort_array = array.sort
-        y = sort_array.last
+        y = array.reduce { |max, num| num > max ? num : max }
         array.map { |el| el.positive? ? y : el }
       end
 
