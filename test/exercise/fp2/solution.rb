@@ -6,12 +6,12 @@ module Exercise
 
       # Написать свою функцию my_each
       def my_each
-        i = 0
-        while i < length
-          yield(self[i])
-          i += 1
+        tail = self
+        loop do
+          head, *tail = tail
+          yield head
+          break if tail.empty?
         end
-        self
       end
 
       # Написать свою функцию my_map
@@ -21,14 +21,18 @@ module Exercise
 
       # Написать свою функцию my_compact
       def my_compact
-        new_array = MyArray.new
-        my_map { |el| new_array << el unless el.nil? }
-        new_array
+        my_reduce(MyArray.new) { |acc, el| el.nil? ? acc : acc << el }
       end
 
       # Написать свою функцию my_reduce
       def my_reduce(acc = nil)
-        my_each { |el| acc = acc.nil? ? el : yield(acc, el) }
+        tail = self
+        acc, *tail = tail if acc.nil?
+        loop do
+          head, *tail = tail
+          acc = yield acc, head
+          break if tail.empty?
+        end
         acc
       end
     end
